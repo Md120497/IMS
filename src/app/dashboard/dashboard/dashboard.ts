@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Customer, DashboardData, Order, Product } from './dashboard-data';
@@ -13,6 +13,8 @@ import { Customer, DashboardData, Order, Product } from './dashboard-data';
 })
 export class Dashboard {
   searchTerm = '';
+  globalSearchTerm = '';
+  isGlobalSearchOpen = false;
   selectedCategory = 'All categories';
   readonly userName = 'Mohd Danish';
 
@@ -160,10 +162,73 @@ export class Dashboard {
   get filteredProducts() {
     const query = this.searchTerm.trim().toLowerCase();
     return this.products.filter((product) => {
-      const matchesQuery = !query || `${product.name} ${product.sku} ${product.category}`.toLowerCase().includes(query);
+      const matchesQuery = !query || Object.values(product).join(' ').toLowerCase().includes(query);
       const matchesCategory = this.selectedCategory === 'All categories' || product.category === this.selectedCategory;
       return matchesQuery && matchesCategory;
     });
+  }
+
+  get globalSearchResults(): Array<{ type: string; title: string; detail: string; route: string; query?: string }> {
+    const query = this.globalSearchTerm.trim().toLowerCase();
+    if (!query) return [];
+
+    const pages = [
+      { title: 'Overview', route: '/dashboard', keywords: 'dashboard overview home' },
+      { title: 'Inventory', route: '/inventory', keywords: 'inventory products stock catalog sku' },
+      { title: 'Orders', route: '/orders', keywords: 'orders sales fulfillment' },
+      { title: 'Customers', route: '/customers', keywords: 'customers clients directory' },
+      { title: 'Reports', route: '/reports', keywords: 'reports revenue analytics performance' },
+      { title: 'Themes', route: '/themes', keywords: 'themes appearance colors preferences' },
+      { title: 'My profile', route: '/profile', keywords: 'profile account user' },
+    ].filter((page) => `${page.title} ${page.keywords}`.toLowerCase().includes(query))
+      .map((page) => ({ type: 'Page', title: page.title, detail: 'Open page', route: page.route }));
+
+    const products = this.products.filter((product) =>
+      Object.values(product).join(' ').toLowerCase().includes(query),
+    ).map((product) => ({ type: 'Product', title: product.name, detail: `${product.sku} · ${product.category} · ${product.status}`, route: '/inventory', query: product.name }));
+
+    const orders = this.orders.filter((order) =>
+      Object.values(order).join(' ').toLowerCase().includes(query),
+    ).map((order) => ({ type: 'Order', title: order.id, detail: `${order.customer} · ${order.status} · ${order.items}`, route: '/orders', query: order.id }));
+
+    const customers = this.customers.filter((customer) =>
+      Object.values(customer).join(' ').toLowerCase().includes(query),
+    ).map((customer) => ({ type: 'Customer', title: customer.name, detail: `${customer.email} · ${customer.segment}`, route: '/customers', query: customer.name }));
+
+    return [...pages, ...products, ...orders, ...customers].slice(0, 8);
+  }
+
+  openSearchResult(result: { route: string; query?: string }): void {
+    this.globalSearchTerm = '';
+    this.isGlobalSearchOpen = false;
+    this.searchTerm = result.query ?? '';
+    this.router.navigate([result.route]);
+  }
+
+  onGlobalSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') this.isGlobalSearchOpen = false;
+    if (event.key === 'Enter' && this.globalSearchResults.length) {
+      event.preventDefault();
+      this.openSearchResult(this.globalSearchResults[0]);
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  focusGlobalSearch(event: KeyboardEvent): void {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      document.getElementById('project-search')?.focus();
+    }
+  }
+
+  get filteredOrders(): Order[] {
+    const query = this.searchTerm.trim().toLowerCase();
+    return this.orders.filter((order) => !query || Object.values(order).join(' ').toLowerCase().includes(query));
+  }
+
+  get filteredCustomers(): Customer[] {
+    const query = this.searchTerm.trim().toLowerCase();
+    return this.customers.filter((customer) => !query || Object.values(customer).join(' ').toLowerCase().includes(query));
   }
 
   saveProduct(): void {
