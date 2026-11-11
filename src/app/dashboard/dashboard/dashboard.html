@@ -1,0 +1,167 @@
+<div class="dashboard-shell">
+	<aside class="sidebar">
+		<a class="brand-lockup" routerLink="/dashboard" aria-label="IMS dashboard">
+			<span class="brand-mark" aria-hidden="true">
+				<svg viewBox="0 0 32 32" fill="none"><path d="m16 3.5 12 6.5v12l-12 6.5L4 22V10l12-6.5Z" stroke="currentColor" stroke-width="2"/><path d="m4.5 10 11.5 6.5L27.5 10M16 16.5v11" stroke="currentColor" stroke-width="2"/></svg>
+			</span>
+			<span class="brand-name">IMS<span>.</span></span>
+		</a>
+
+		<div class="workspace-switcher">
+			<span class="workspace-avatar">A</span>
+			<span class="workspace-copy"><strong>Acme Studio</strong><small>Workspace</small></span>
+			<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+		</div>
+
+		<p class="nav-label">WORKSPACE</p>
+		<nav class="main-nav" aria-label="Main navigation">
+			<a class="nav-item" routerLink="/dashboard" [class.active]="page === 'dashboard'" [attr.aria-current]="page === 'dashboard' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>Overview</span></a>
+			<a class="nav-item" routerLink="/inventory" [class.active]="page === 'inventory'" [attr.aria-current]="page === 'inventory' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg><span>Inventory</span><span class="nav-count">24</span></a>
+			<a class="nav-item" routerLink="/orders" [class.active]="page === 'orders'" [attr.aria-current]="page === 'orders' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3m8 2V3M4 10h16"/><path d="M8 14h3m-3 3h7"/></svg><span>Orders</span><span class="nav-count">8</span></a>
+			<a class="nav-item" routerLink="/customers" [class.active]="page === 'customers'" [attr.aria-current]="page === 'customers' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20h-11ZM16 5.5a3 3 0 0 1 0 5.8m2 3.2a5 5 0 0 1 2.5 4.3V20h-2"/></svg><span>Customers</span></a>
+			<a class="nav-item" routerLink="/reports" [class.active]="page === 'reports'" [attr.aria-current]="page === 'reports' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg><span>Reports</span></a>
+		</nav>
+
+		<p class="nav-label tools-label">PREFERENCES</p>
+		<nav class="main-nav" aria-label="Preferences">
+			<a class="nav-item" routerLink="/themes" [class.active]="page === 'themes'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.4-3.4 1.4 1.4 0 0 1 1-2.4h1.1A4.3 4.3 0 0 0 21 11C21 6.6 17 3 12 3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="15" cy="8" r="1"/></svg><span>Themes</span></a>
+			<a class="nav-item" routerLink="/dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.4 1.6c-.9 1-1.9 1.2-1.9 2.9m0 3h.01"/></svg><span>Help center</span></a>
+		</nav>
+
+		<div class="sidebar-bottom">
+			<div class="plan-card"><span class="plan-icon">✦</span><strong>Pro plan</strong><p>Your workspace is running smoothly.</p><div class="plan-progress"><span></span></div><small>8,420 <span>/ 10,000 products</span></small><button type="button">Manage plan <span>↗</span></button></div>
+			<a class="profile" routerLink="/profile"><span class="profile-avatar">MD</span><span class="profile-copy"><strong>Mohd Danish</strong><small>Admin account</small></span><span class="profile-menu" aria-hidden="true">···</span></a>
+		</div>
+	</aside>
+
+	<main class="main-content">
+		<header class="topbar">
+			<div class="breadcrumb"><span>Workspace</span><span class="crumb-separator">/</span><strong>{{ pageTitle }}</strong></div>
+			<div class="topbar-actions">
+				<label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input aria-label="Search dashboard" placeholder="Search anything..." /><kbd>⌘ K</kbd></label>
+				<button class="icon-button notification-button" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></svg><i></i></button>
+				<a class="top-avatar" routerLink="/profile" aria-label="Open your profile">MD</a>
+			</div>
+		</header>
+
+		<div class="page-content">
+			<section class="welcome-row">
+				<div><p class="date-label">{{ formattedDate }}</p><h1>{{ page === 'dashboard' ? greeting : pageTitle }} <span>✦</span></h1><p class="welcome-subtitle">{{ pageDescription }}</p></div>
+				<a *ngIf="!createType" class="primary-button" [routerLink]="primaryActionRoute"><span>＋</span> {{ primaryActionLabel }}</a>
+			</section>
+
+			<ng-container *ngIf="createType; else regularPageContent">
+				<section class="panel form-panel" *ngIf="createType === 'product'">
+					<div class="panel-heading"><div><h2>Product details</h2><p>Enter the product information for your catalog.</p></div></div>
+					<form #productCreateForm="ngForm" class="create-form" (ngSubmit)="saveProduct()">
+						<label>Product name<input name="productName" [(ngModel)]="productForm.name" required maxlength="100" placeholder="e.g. Wireless Headphones" /></label>
+						<label>SKU<input name="productSku" [(ngModel)]="productForm.sku" required maxlength="40" placeholder="e.g. WH-2048" /></label>
+						<label>Category<select name="productCategory" [(ngModel)]="productForm.category" required><option *ngFor="let category of categories.slice(1)" [value]="category">{{ category }}</option></select></label>
+						<label>Stock quantity<input name="productStock" type="number" [(ngModel)]="productForm.stock" required min="0" step="1" /></label>
+						<label>Price<input name="productPrice" type="number" [(ngModel)]="productForm.price" required min="0.01" step="0.01" /></label>
+						<div class="form-actions"><a class="cancel-button" routerLink="/inventory">Cancel</a><button class="primary-button" type="submit" [disabled]="productCreateForm.invalid">Save product</button></div>
+					</form>
+				</section>
+
+				<section class="panel form-panel" *ngIf="createType === 'customer'">
+					<div class="panel-heading"><div><h2>Customer details</h2><p>Enter the contact information for this customer.</p></div></div>
+					<form #customerCreateForm="ngForm" class="create-form" (ngSubmit)="saveCustomer()">
+						<label>Full name<input name="customerName" [(ngModel)]="customerForm.name" required maxlength="100" placeholder="e.g. Jordan Lee" /></label>
+						<label>Email address<input name="customerEmail" type="email" [(ngModel)]="customerForm.email" required maxlength="254" placeholder="name@example.com" /></label>
+						<label>Phone number<input name="customerPhone" type="tel" [(ngModel)]="customerForm.phone" maxlength="30" placeholder="+91 98765 43210" /></label>
+						<label>Company name<input name="customerCompany" [(ngModel)]="customerForm.company" maxlength="120" placeholder="Company (optional)" /></label>
+						<label class="form-field-wide">Address<input name="customerAddress" [(ngModel)]="customerForm.address" maxlength="200" placeholder="Street address" /></label>
+						<label>City<input name="customerCity" [(ngModel)]="customerForm.city" maxlength="80" placeholder="City" /></label>
+						<label>State / Province<input name="customerState" [(ngModel)]="customerForm.state" maxlength="80" placeholder="State or province" /></label>
+						<label>Postal code<input name="customerPostalCode" [(ngModel)]="customerForm.postalCode" maxlength="20" placeholder="Postal code" /></label>
+						<label>Country<input name="customerCountry" [(ngModel)]="customerForm.country" maxlength="80" placeholder="Country" /></label>
+						<label>GST number<input name="customerGstNumber" [(ngModel)]="customerForm.gstNumber" maxlength="15" pattern="[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z][1-9A-Za-z]Z[0-9A-Za-z]" placeholder="15-character GSTIN (optional)" /></label>
+						<label class="form-field-wide">Notes<textarea name="customerNotes" [(ngModel)]="customerForm.notes" maxlength="500" rows="3" placeholder="Additional customer information (optional)"></textarea></label>
+						<div class="form-actions"><a class="cancel-button" routerLink="/customers">Cancel</a><button class="primary-button" type="submit" [disabled]="customerCreateForm.invalid">Save customer</button></div>
+					</form>
+				</section>
+
+				<section class="panel form-panel" *ngIf="createType === 'order'">
+					<div class="panel-heading"><div><h2>Order details</h2><p>Select a customer, product, and quantity to create this order.</p></div></div>
+					<form #orderCreateForm="ngForm" class="create-form" (ngSubmit)="saveOrder()">
+						<label>Customer<select name="orderCustomer" [(ngModel)]="orderForm.customer" required><option value="" disabled>Choose a customer</option><option *ngFor="let customer of customers" [value]="customer.name">{{ customer.name }}</option></select></label>
+						<label>Product<select name="orderProduct" [(ngModel)]="orderForm.product" required><option value="" disabled>Choose a product</option><option *ngFor="let product of products" [value]="product.name" [disabled]="product.stock === 0">{{ product.name }} ({{ product.stock }} in stock)</option></select></label>
+						<label>Quantity<input name="orderQuantity" type="number" [(ngModel)]="orderForm.quantity" required min="1" step="1" /></label>
+						<div class="form-actions"><a class="cancel-button" routerLink="/orders">Cancel</a><button class="primary-button" type="submit" [disabled]="orderCreateForm.invalid || !selectedOrderProduct || orderForm.quantity > selectedOrderProduct.stock">Create order</button></div>
+					</form>
+				</section>
+			</ng-container>
+
+			<ng-template #regularPageContent>
+			<section class="panel preferences-panel" *ngIf="page === 'themes'">
+				<div class="panel-heading theme-heading"><div><span class="theme-eyebrow">MAKE IT YOURS</span><h2>Choose your look</h2><p>Your theme follows you across the dashboard, sign in, and registration pages.</p></div><span class="saved-badge"><i></i> Saved on this device</span></div>
+				<div class="theme-options" role="radiogroup" aria-label="Color theme">
+					<button type="button" class="theme-option" *ngFor="let theme of themes" [class.selected]="selectedTheme === theme.id" [attr.aria-checked]="selectedTheme === theme.id" [attr.aria-label]="theme.name + ' theme'" role="radio" (click)="setTheme(theme.id)"><span class="theme-preview" [attr.data-swatch]="theme.id"><i class="preview-sidebar"></i><i class="preview-content"><b></b><b></b><b></b></i><i class="preview-action"></i></span><span class="theme-meta"><span class="theme-name">{{ theme.name }} <small>{{ theme.tone }}</small></span><span class="theme-description">{{ theme.description }}</span></span><span class="theme-check" *ngIf="selectedTheme === theme.id" aria-hidden="true">✓</span></button>
+				</div>
+			</section>
+			<section class="profile-view" *ngIf="page === 'profile'">
+				<div class="panel profile-card"><div class="profile-hero"><span class="profile-large-avatar">MD</span><div><p class="profile-kicker">WORKSPACE ADMINISTRATOR</p><h2>Mohd Danish</h2><p>demo&#64;ims.com</p></div></div><div class="profile-details"><div><small>Full name</small><strong>Mohd Danish</strong></div><div><small>Email address</small><strong>demo&#64;ims.com</strong></div><div><small>Workspace</small><strong>Acme Studio</strong></div><div><small>Account type</small><strong>Administrator</strong></div></div><div class="profile-actions"><a class="cancel-button" routerLink="/themes">Appearance settings</a><button type="button" class="logout-button" (click)="logout()">Log out</button></div></div>
+			</section>
+			<section class="stats-grid" *ngIf="page === 'dashboard'" aria-label="Inventory summary">
+				<article class="stat-card"><div class="stat-top"><span>Total products</span><span class="stat-icon purple"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg></span></div><div class="stat-value">8,420</div><div class="stat-foot"><span class="trend positive">↗ 12.8%</span><span>vs. last month</span></div><div class="mini-sparkline spark-purple"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+				<article class="stat-card"><div class="stat-top"><span>Stock value</span><span class="stat-icon green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18m5-14.5c-.7-1-2.1-1.5-4-1.5-2.5 0-4 1.2-4 3s1.3 2.7 4 3.2 4 1.3 4 3.1-1.6 3.2-4.3 3.2c-2 0-3.6-.6-4.7-1.8"/></svg></span></div><div class="stat-value">$284,560<span class="value-decimal">.00</span></div><div class="stat-foot"><span class="trend positive">↗ 8.2%</span><span>vs. last month</span></div><div class="mini-sparkline spark-green"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+				<article class="stat-card"><div class="stat-top"><span>Low stock items</span><span class="stat-icon amber"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4m0 3h.01"/></svg></span></div><div class="stat-value">18</div><div class="stat-foot"><span class="trend negative">↑ 3 items</span><span>need attention</span></div><div class="mini-sparkline spark-amber"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+				<article class="stat-card"><div class="stat-top"><span>Out of stock</span><span class="stat-icon rose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v14H4zM8 7V5a4 4 0 0 1 8 0v2"/><path d="m9 13 6 6m0-6-6 6"/></svg></span></div><div class="stat-value">06</div><div class="stat-foot"><span class="trend positive">↓ 2 items</span><span>since last week</span></div><div class="mini-sparkline spark-rose"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+			</section>
+
+			<section class="overview-grid" *ngIf="page === 'dashboard'">
+				<article class="panel sales-panel">
+					<div class="panel-heading"><div><h2>Inventory overview</h2><p>Stock movement across your workspace</p></div><button class="select-button" type="button">Last 7 days <span>⌄</span></button></div>
+					<div class="chart-legend"><span><i class="legend-dot in-stock-dot"></i>Stock in</span><span><i class="legend-dot out-stock-dot"></i>Stock out</span><strong>+18.6% <small>vs. last week</small></strong></div>
+					<div class="chart-area" role="img" aria-label="Bar chart showing stock in and stock out over the last seven days">
+						<div class="chart-y-labels"><span>500</span><span>400</span><span>300</span><span>200</span><span>100</span></div>
+						<div class="chart-plot"><div class="chart-guides"><i></i><i></i><i></i><i></i><i></i></div><div class="bar-groups"><div class="bar-group"><i class="bar-in" style="--height:52%"></i><i class="bar-out" style="--height:33%"></i></div><div class="bar-group"><i class="bar-in" style="--height:72%"></i><i class="bar-out" style="--height:45%"></i></div><div class="bar-group"><i class="bar-in" style="--height:61%"></i><i class="bar-out" style="--height:38%"></i></div><div class="bar-group"><i class="bar-in" style="--height:88%"></i><i class="bar-out" style="--height:53%"></i></div><div class="bar-group"><i class="bar-in" style="--height:69%"></i><i class="bar-out" style="--height:43%"></i></div><div class="bar-group"><i class="bar-in" style="--height:95%"></i><i class="bar-out" style="--height:58%"></i></div><div class="bar-group"><i class="bar-in" style="--height:78%"></i><i class="bar-out" style="--height:49%"></i></div></div><div class="chart-x-labels"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span></div></div>
+					</div>
+				</article>
+
+				<article class="panel category-panel">
+					<div class="panel-heading"><div><h2>Stock by category</h2><p>Current product distribution</p></div><button class="more-button" type="button" aria-label="More category options">···</button></div>
+					<div class="donut-wrap"><div class="donut-chart"><div class="donut-center"><strong>8,420</strong><span>Products</span></div></div></div>
+					<div class="category-legend"><div><span class="category-name"><i class="category-dot cat-electronics"></i>Electronics</span><strong>42% <small>3,536</small></strong></div><div><span class="category-name"><i class="category-dot cat-furniture"></i>Furniture</span><strong>28% <small>2,358</small></strong></div><div><span class="category-name"><i class="category-dot cat-accessories"></i>Accessories</span><strong>18% <small>1,516</small></strong></div><div><span class="category-name"><i class="category-dot cat-other"></i>Other</span><strong>12% <small>1,010</small></strong></div></div>
+				</article>
+			</section>
+
+			<section class="panel inventory-panel" *ngIf="page === 'dashboard' || page === 'inventory'">
+				<div class="panel-heading inventory-heading"><div><h2>{{ page === 'inventory' ? 'All products' : 'Recent inventory' }}</h2><p>{{ page === 'inventory' ? 'Review and manage stock across your catalog.' : 'Keep an eye on your most recently updated products' }}</p></div><a *ngIf="page === 'dashboard'" class="view-all" routerLink="/inventory">View all products <span>→</span></a></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" aria-label="Search products" placeholder="Search products..." /></label><label class="category-filter"><select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" aria-label="Filter by category"><option *ngFor="let category of categories" [value]="category">{{ category }}</option></select></label><button class="filter-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Filters</button></div>
+				<div class="table-scroll"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>CATEGORY</th><th>STOCK LEVEL</th><th>PRICE</th><th>STATUS</th><th></th></tr></thead><tbody><tr *ngFor="let product of filteredProducts"><td><span class="product-cell"><i class="product-thumb" [ngClass]="product.color">{{ product.initials }}</i><strong>{{ product.name }}</strong></span></td><td class="muted-cell">{{ product.sku }}</td><td class="muted-cell">{{ product.category }}</td><td><span class="stock-cell"><span class="stock-track"><i [style.width.%]="product.stock > 100 ? 100 : product.stock * 1.2" [class.stock-empty]="product.stock === 0"></i></span><span>{{ product.stock }}</span></span></td><td class="price-cell">${{ product.price | number:'1.2-2' }}</td><td><span class="status-pill" [ngClass]="product.status.toLowerCase().replace(' ', '-')"><i></i>{{ product.status }}</span></td><td><button class="row-menu" type="button" aria-label="Product actions">···</button></td></tr><tr *ngIf="filteredProducts.length === 0"><td colspan="7" class="empty-state">No products match your search.</td></tr></tbody></table></div>
+				<div class="table-footer"><span>Showing <strong>{{ filteredProducts.length }}</strong> of <strong>{{ products.length }}</strong> products</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
+			</section>
+
+			<section class="stats-grid page-metrics" *ngIf="page === 'orders'" aria-label="Order summary">
+				<article class="stat-card" *ngFor="let metric of orderMetrics"><div class="stat-top"><span>{{ metric.label }}</span><span class="stat-icon" [ngClass]="metric.color"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3m8 2V3M4 10h16"/><path d="M8 14h3m-3 3h7"/></svg></span></div><div class="stat-value">{{ metric.value }}</div><div class="stat-foot"><span class="trend positive">{{ metric.change }}</span><span>vs. last month</span></div></article>
+			</section>
+			<section class="panel data-panel" *ngIf="page === 'orders'">
+				<div class="panel-heading inventory-heading"><div><h2>Recent orders</h2><p>Track fulfillment and payment status for every order.</p></div><button class="select-button" type="button">All orders <span>⌄</span></button></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input aria-label="Search orders" placeholder="Search orders..." /></label><button class="filter-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Filters</button></div>
+				<div class="table-scroll"><table><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>ITEMS</th><th>DATE</th><th>AMOUNT</th><th>STATUS</th><th></th></tr></thead><tbody><tr *ngFor="let order of orders"><td class="price-cell">{{ order.id }}</td><td><span class="product-cell"><i class="product-thumb" [ngClass]="order.color">{{ order.initials }}</i><strong>{{ order.customer }}</strong></span></td><td class="muted-cell">{{ order.items }}</td><td class="muted-cell">{{ order.date }}</td><td class="price-cell">${{ order.amount | number:'1.2-2' }}</td><td><span class="status-pill" [ngClass]="order.status.toLowerCase()"><i></i>{{ order.status }}</span></td><td><button class="row-menu" type="button" aria-label="Order actions">···</button></td></tr></tbody></table></div>
+				<div class="table-footer"><span>Showing <strong>{{ orders.length }}</strong> recent orders</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
+			</section>
+
+			<section class="stats-grid page-metrics" *ngIf="page === 'customers'" aria-label="Customer summary">
+				<article class="stat-card" *ngFor="let metric of customerMetrics"><div class="stat-top"><span>{{ metric.label }}</span><span class="stat-icon" [ngClass]="metric.color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20h-11ZM16 5.5a3 3 0 0 1 0 5.8m2 3.2a5 5 0 0 1 2.5 4.3V20h-2"/></svg></span></div><div class="stat-value">{{ metric.value }}</div><div class="stat-foot"><span class="trend positive">{{ metric.change }}</span><span>vs. last month</span></div></article>
+			</section>
+			<section class="panel data-panel" *ngIf="page === 'customers'">
+				<div class="panel-heading inventory-heading"><div><h2>Customer directory</h2><p>Customer details, order history, and lifetime value.</p></div><button class="select-button" type="button">All customers <span>⌄</span></button></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input aria-label="Search customers" placeholder="Search customers..." /></label><button class="filter-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Filters</button></div>
+				<div class="table-scroll"><table><thead><tr><th>CUSTOMER</th><th>ORDERS</th><th>TOTAL SPENT</th><th>LAST ORDER</th><th>SEGMENT</th><th></th></tr></thead><tbody><tr *ngFor="let customer of customers"><td><span class="product-cell"><i class="product-thumb" [ngClass]="customer.color">{{ customer.initials }}</i><span class="customer-details"><strong>{{ customer.name }}</strong><small>{{ customer.email }}</small></span></span></td><td class="muted-cell">{{ customer.orders }}</td><td class="price-cell">${{ customer.spent | number:'1.2-2' }}</td><td class="muted-cell">{{ customer.lastOrder }}</td><td><span class="customer-segment" [class.vip-segment]="customer.segment === 'VIP'">{{ customer.segment }}</span></td><td><button class="row-menu" type="button" aria-label="Customer actions">···</button></td></tr></tbody></table></div>
+				<div class="table-footer"><span>Showing <strong>{{ customers.length }}</strong> of <strong>2,840</strong> customers</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
+			</section>
+
+			<section *ngIf="page === 'reports'" class="reports-page">
+				<div class="report-toolbar"><span class="report-range">Report period <strong>Last 7 months</strong></span><button class="select-button" type="button">Export CSV <span>↓</span></button></div>
+				<section class="stats-grid page-metrics" aria-label="Business performance summary"><article class="stat-card"><div class="stat-top"><span>Total revenue</span><span class="stat-icon purple">$</span></div><div class="stat-value">$284,560</div><div class="stat-foot"><span class="trend positive">↗ 16.8%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Total orders</span><span class="stat-icon green">↗</span></div><div class="stat-value">3,642</div><div class="stat-foot"><span class="trend positive">↗ 12.4%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Avg. order value</span><span class="stat-icon amber">$</span></div><div class="stat-value">$78.13</div><div class="stat-foot"><span class="trend positive">↗ 3.9%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Products sold</span><span class="stat-icon rose">✦</span></div><div class="stat-value">8,294</div><div class="stat-foot"><span class="trend positive">↗ 9.2%</span><span>vs. previous period</span></div></article></section>
+				<div class="reports-grid"><article class="panel report-chart-panel"><div class="panel-heading"><div><h2>Revenue &amp; orders</h2><p>Monthly performance over time</p></div><span class="report-note">USD · Orders</span></div><div class="report-chart"><div class="report-y-labels"><span>$50k</span><span>$40k</span><span>$30k</span><span>$20k</span><span>$10k</span></div><div class="report-plot"><div class="report-guides"><i></i><i></i><i></i><i></i><i></i></div><div class="report-bars"><div class="report-bar-group" *ngFor="let item of reportMonths"><span class="report-revenue" [style.height.%]="item.revenue"></span><span class="report-orders" [style.height.%]="item.orders"></span><small>{{ item.month }}</small></div></div></div></div><div class="report-legend"><span><i class="in-stock-dot"></i>Revenue</span><span><i class="out-stock-dot"></i>Orders</span></div></article>
+					<article class="panel report-insights"><div class="panel-heading"><div><h2>Top products</h2><p>By revenue this period</p></div><button class="more-button" type="button" aria-label="More report options">···</button></div><div class="top-products"><div *ngFor="let product of products.slice(0, 4)"><span class="product-thumb" [ngClass]="product.color">{{ product.initials }}</span><span class="top-product-info"><strong>{{ product.name }}</strong><small>{{ product.stock + 20 }} units sold</small></span><strong class="top-product-revenue">${{ product.price * 24 | number:'1.0-0' }}</strong></div></div><a class="view-all report-view-all" routerLink="/inventory">View inventory <span>→</span></a></article></div>
+				<div class="panel report-summary"><div><span class="summary-icon">↗</span><span><strong>Revenue is trending up</strong><small>Your revenue grew 16.8% compared to the previous period. Electronics led this month's sales.</small></span></div><span class="summary-badge">Healthy growth</span></div>
+			</section>
+			</ng-template>
+			<footer class="page-footer"><span>© 2026 IMS. Inventory made clearer.</span><span><a routerLink="/dashboard">Support</a><a routerLink="/dashboard">Documentation</a><span>All systems operational <i></i></span></span></footer>
+		</div>
+	</main>
+</div>

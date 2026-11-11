@@ -1,0 +1,38 @@
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="logo-section">
+      <div class="logo">📦</div>
+      <h1>Get Started</h1>
+      <p>Create your account to get started</p>
+    </div>
+
+    <form [formGroup]="regForm" (ngSubmit)="onRegister()">
+      <div class="input-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" formControlName="fullName" id="fullName" placeholder="Enter your full name">
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" formControlName="email" id="email" placeholder="Enter your email">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" id="password" placeholder="Create a password">
+      </div>
+
+      <div class="checkbox-label" style="margin: 1.5rem 0;">
+        <input type="checkbox" formControlName="agreeTerms" id="terms">
+        <label for="terms">I agree to the Terms & Conditions</label>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="regForm.invalid">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login" class="link">Sign in</a></p>
+    </div>
+  </div>
+</div>

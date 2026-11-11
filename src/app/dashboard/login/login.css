@@ -1,0 +1,127 @@
+:host {
+  --ink: #172421;
+  --muted: #788580;
+  --line: #e6ebe8;
+  --green: #2f9b72;
+  display: block;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+.auth-page {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(480px, 1.02fr);
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #fbfcfb;
+}
+
+.brand-panel {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 100%;
+  padding: clamp(32px, 5vw, 72px) clamp(36px, 6vw, 92px) 34px;
+  color: #f5faf7;
+  background: radial-gradient(ellipse at 75% 83%, #20534a 0, transparent 37%), linear-gradient(145deg, #102c29, #10221f 74%);
+}
+
+.brand-lockup, .mobile-brand { display: inline-flex; align-items: center; gap: 11px; width: fit-content; color: inherit; text-decoration: none; }
+.brand-mark { display: grid; width: 39px; height: 39px; place-items: center; border: 1px solid rgb(255 255 255 / 24%); border-radius: 12px; color: #b7efcf; background: rgb(255 255 255 / 7%); }
+.brand-mark svg { width: 25px; height: 25px; }
+.brand-name { font-size: 22px; font-weight: 750; letter-spacing: -.07em; }
+.brand-name > span { color: #a7e7c2; }
+.brand-copy { position: relative; z-index: 1; margin: auto 0 36px; max-width: 470px; padding-top: 72px; }
+.eyebrow, .form-eyebrow { margin: 0 0 20px; font-size: 10px; font-weight: 750; letter-spacing: .16em; }
+.eyebrow { display: flex; align-items: center; gap: 10px; color: #b8c9c1; }
+.eyebrow > span, .health-badge > span { width: 7px; height: 7px; border-radius: 50%; background: #7de0aa; box-shadow: 0 0 12px rgb(125 224 170 / 65%); }
+.brand-copy h2 { margin: 0; font-size: clamp(42px, 5vw, 68px); font-weight: 520; line-height: .99; letter-spacing: -.065em; }
+.brand-copy h2 em { color: #9cdbb5; font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
+.brand-description { max-width: 380px; margin: 23px 0 0; color: #bdcbc5; font-size: 14px; line-height: 1.8; }
+.insight-card { position: relative; z-index: 1; width: min(100%, 410px); margin: 0 0 34px auto; padding: 21px 23px 17px; border: 1px solid rgb(255 255 255 / 15%); border-radius: 17px; background: rgb(255 255 255 / 7%); box-shadow: 0 22px 65px rgb(0 0 0 / 16%); backdrop-filter: blur(14px); }
+.insight-heading, .chart-caption { display: flex; align-items: center; justify-content: space-between; }
+.insight-heading > div { display: grid; gap: 7px; }
+.insight-label { color: #aebfb7; font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+.insight-heading strong { color: #f6fbf7; font-size: 15px; font-weight: 600; }
+.health-badge { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid rgb(255 255 255 / 13%); border-radius: 20px; color: #d3e6dc; font-size: 10px; }
+.health-badge > span { width: 6px; height: 6px; }
+.chart { position: relative; height: 104px; margin-top: 18px; }
+.chart-grid { position: absolute; inset: 5px 0 0; display: flex; flex-direction: column; justify-content: space-between; }
+.chart-grid i { border-top: 1px dashed rgb(255 255 255 / 13%); }
+.chart-bars { position: absolute; inset: 0 6px; display: flex; align-items: end; justify-content: space-around; gap: 9px; }
+.chart-bars span { z-index: 1; width: 9%; height: var(--bar-height); border-radius: 5px 5px 2px 2px; background: linear-gradient(180deg, #a4d8b8, rgb(164 216 184 / 20%)); }
+.chart-bars .bar-highlight { background: linear-gradient(180deg, #8ee4ad, #4a9f76); }
+.chart-caption { margin-top: 12px; color: #b6c6bf; font-size: 10px; }
+.chart-caption strong { color: #a7e7c2; font-size: 11px; }
+.brand-footnote { position: relative; z-index: 1; margin: auto 0 0; color: #90a49a; font-size: 11px; letter-spacing: .02em; }
+.orb { position: absolute; z-index: -1; border: 1px solid rgb(199 240 214 / 8%); border-radius: 50%; }
+.orb-one { top: 20%; right: -210px; width: 480px; height: 480px; }
+.orb-two { top: calc(20% + 45px); right: -165px; width: 390px; height: 390px; }
+
+.login-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 56px clamp(36px, 8vw, 120px); }
+.login-content { width: min(100%, 390px); }
+.mobile-brand { display: none; color: var(--ink); }
+.form-heading { margin-bottom: 34px; }
+.form-eyebrow { margin-bottom: 12px; color: var(--green); }
+.form-heading h1 { margin: 0; color: #172421; font-size: clamp(31px, 3vw, 38px); font-weight: 650; letter-spacing: -.055em; }
+.form-heading > p:last-child { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.input-group { margin-bottom: 21px; }
+.input-group label { display: block; margin-bottom: 8px; color: #34423d; font-size: 12px; font-weight: 650; }
+.input-shell { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 15px; border: 1px solid #dfe6e2; border-radius: 10px; background: #fff; transition: border-color .2s, box-shadow .2s, background .2s; }
+.input-shell:focus-within { border-color: #52a982; background: #fff; box-shadow: 0 0 0 4px rgb(47 155 114 / 11%); }
+.input-shell > svg { flex: 0 0 19px; width: 19px; height: 19px; color: #8a9992; }
+.input-shell input { width: 100%; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; color: #25332e; background: transparent; font: inherit; font-size: 13px; }
+.input-shell input::placeholder { color: #a4afaa; }
+.field-error { display: block; margin-top: 7px; color: #b54747; font-size: 11px; }
+.btn-primary { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 52px; margin-top: 27px; border: 0; border-radius: 10px; color: #fff; background: #1d4438; box-shadow: 0 8px 18px rgb(29 68 56 / 15%); cursor: pointer; font: inherit; font-size: 13px; font-weight: 650; transition: transform .2s, background .2s, box-shadow .2s; }
+.btn-primary svg { width: 18px; height: 18px; transition: transform .2s; }
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); background: #27604c; box-shadow: 0 11px 22px rgb(29 68 56 / 20%); }
+.btn-primary:hover:not(:disabled) svg { transform: translateX(3px); }
+.btn-primary:focus-visible, a:focus-visible { outline: 3px solid #73c89b; outline-offset: 3px; }
+.btn-primary:disabled { background: #9aada4; box-shadow: none; cursor: not-allowed; }
+.login-message { display: flex; align-items: center; gap: 9px; margin: 4px 0 0; color: #b54747; font-size: 12px; line-height: 1.5; }
+.login-message.success { color: #287c58; }
+.message-dot { flex: 0 0 7px; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.auth-footer { margin-top: 27px; text-align: center; }
+.auth-footer p { margin: 0; color: #7b8882; font-size: 12px; }
+.auth-footer a { margin-left: 3px; color: #287c58; font-weight: 650; text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; }
+.auth-footer a span { display: inline-block; margin-left: 2px; font-size: 14px; }
+.security-note { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 44px 0 0; color: #98a39e; font-size: 10px; }
+.security-note svg { width: 16px; height: 16px; color: #7d9d8b; }
+.mobile-copyright { display: none; }
+
+@media (max-width: 900px) {
+  .auth-page { grid-template-columns: minmax(0, .88fr) minmax(430px, 1.12fr); }
+  .brand-panel { padding-right: 36px; padding-left: 36px; }
+  .brand-copy h2 { font-size: clamp(42px, 5.3vw, 56px); }
+  .login-panel { padding-right: 46px; padding-left: 46px; }
+}
+
+@media (max-width: 700px) {
+  .auth-page { display: block; background: #fbfcfb; }
+  .brand-panel { display: none; }
+  .login-panel { min-height: 100vh; min-height: 100svh; justify-content: flex-start; padding: 28px 24px 20px; }
+  .login-content { width: min(100%, 410px); margin: auto; }
+  .mobile-brand { display: inline-flex; margin-bottom: clamp(48px, 11vh, 86px); }
+  .mobile-brand .brand-mark { border-color: #dce8e1; color: #287c58; background: #edf5f0; }
+  .mobile-brand .brand-name > span { color: #4a9d72; }
+  .form-heading { margin-bottom: 30px; }
+  .security-note { margin-top: 34px; }
+  .mobile-copyright { display: block; margin: 25px 0 0; color: #a0aaa5; font-size: 10px; text-align: center; }
+}
+
+@media (max-width: 380px) {
+  .login-panel { padding-right: 20px; padding-left: 20px; }
+  .mobile-brand { margin-bottom: 40px; }
+  .form-heading h1 { font-size: 31px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
