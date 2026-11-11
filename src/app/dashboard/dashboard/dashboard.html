@@ -53,52 +53,10 @@
 		<div class="page-content">
 			<section class="welcome-row">
 				<div><p class="date-label">{{ formattedDate }}</p><h1>{{ page === 'dashboard' ? greeting : pageTitle }} <span>✦</span></h1><p class="welcome-subtitle">{{ pageDescription }}</p></div>
-				<a *ngIf="!createType" class="primary-button" [routerLink]="primaryActionRoute"><span>＋</span> {{ primaryActionLabel }}</a>
+				<button *ngIf="!createType" class="primary-button" type="button" (click)="openCreateModal(primaryActionType)"><span>＋</span> {{ primaryActionLabel }}</button>
 			</section>
 
-			<ng-container *ngIf="createType; else regularPageContent">
-				<section class="panel form-panel" *ngIf="createType === 'product'">
-					<div class="panel-heading"><div><h2>Product details</h2><p>Enter the product information for your catalog.</p></div></div>
-					<form #productCreateForm="ngForm" class="create-form" (ngSubmit)="saveProduct()">
-						<label>Product name<input name="productName" [(ngModel)]="productForm.name" required maxlength="100" placeholder="e.g. Wireless Headphones" /></label>
-						<label>SKU<input name="productSku" [(ngModel)]="productForm.sku" required maxlength="40" placeholder="e.g. WH-2048" /></label>
-						<label>Category<select name="productCategory" [(ngModel)]="productForm.category" required><option *ngFor="let category of categories.slice(1)" [value]="category">{{ category }}</option></select></label>
-						<label>Stock quantity<input name="productStock" type="number" [(ngModel)]="productForm.stock" required min="0" step="1" /></label>
-						<label>Price<input name="productPrice" type="number" [(ngModel)]="productForm.price" required min="0.01" step="0.01" /></label>
-						<div class="form-actions"><a class="cancel-button" routerLink="/inventory">Cancel</a><button class="primary-button" type="submit" [disabled]="productCreateForm.invalid">Save product</button></div>
-					</form>
-				</section>
-
-				<section class="panel form-panel" *ngIf="createType === 'customer'">
-					<div class="panel-heading"><div><h2>Customer details</h2><p>Enter the contact information for this customer.</p></div></div>
-					<form #customerCreateForm="ngForm" class="create-form" (ngSubmit)="saveCustomer()">
-						<label>Full name<input name="customerName" [(ngModel)]="customerForm.name" required maxlength="100" placeholder="e.g. Jordan Lee" /></label>
-						<label>Email address<input name="customerEmail" type="email" [(ngModel)]="customerForm.email" required maxlength="254" placeholder="name@example.com" /></label>
-						<label>Phone number<input name="customerPhone" type="tel" [(ngModel)]="customerForm.phone" maxlength="30" placeholder="+91 98765 43210" /></label>
-						<label>Company name<input name="customerCompany" [(ngModel)]="customerForm.company" maxlength="120" placeholder="Company (optional)" /></label>
-						<label class="form-field-wide">Address<input name="customerAddress" [(ngModel)]="customerForm.address" maxlength="200" placeholder="Street address" /></label>
-						<label>City<input name="customerCity" [(ngModel)]="customerForm.city" maxlength="80" placeholder="City" /></label>
-						<label>State / Province<input name="customerState" [(ngModel)]="customerForm.state" maxlength="80" placeholder="State or province" /></label>
-						<label>Postal code<input name="customerPostalCode" [(ngModel)]="customerForm.postalCode" maxlength="20" placeholder="Postal code" /></label>
-						<label>Country<input name="customerCountry" [(ngModel)]="customerForm.country" maxlength="80" placeholder="Country" /></label>
-						<label>GST number<input name="customerGstNumber" [(ngModel)]="customerForm.gstNumber" maxlength="15" pattern="[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z][1-9A-Za-z]Z[0-9A-Za-z]" placeholder="15-character GSTIN (optional)" /></label>
-						<label class="form-field-wide">Notes<textarea name="customerNotes" [(ngModel)]="customerForm.notes" maxlength="500" rows="3" placeholder="Additional customer information (optional)"></textarea></label>
-						<div class="form-actions"><a class="cancel-button" routerLink="/customers">Cancel</a><button class="primary-button" type="submit" [disabled]="customerCreateForm.invalid">Save customer</button></div>
-					</form>
-				</section>
-
-				<section class="panel form-panel" *ngIf="createType === 'order'">
-					<div class="panel-heading"><div><h2>Order details</h2><p>Select a customer, product, and quantity to create this order.</p></div></div>
-					<form #orderCreateForm="ngForm" class="create-form" (ngSubmit)="saveOrder()">
-						<label>Customer<select name="orderCustomer" [(ngModel)]="orderForm.customer" required><option value="" disabled>Choose a customer</option><option *ngFor="let customer of customers" [value]="customer.name">{{ customer.name }}</option></select></label>
-						<label>Product<select name="orderProduct" [(ngModel)]="orderForm.product" required><option value="" disabled>Choose a product</option><option *ngFor="let product of products" [value]="product.name" [disabled]="product.stock === 0">{{ product.name }} ({{ product.stock }} in stock)</option></select></label>
-						<label>Quantity<input name="orderQuantity" type="number" [(ngModel)]="orderForm.quantity" required min="1" step="1" /></label>
-						<div class="form-actions"><a class="cancel-button" routerLink="/orders">Cancel</a><button class="primary-button" type="submit" [disabled]="orderCreateForm.invalid || !selectedOrderProduct || orderForm.quantity > selectedOrderProduct.stock">Create order</button></div>
-					</form>
-				</section>
-			</ng-container>
-
-			<ng-template #regularPageContent>
+			<ng-container>
 			<section class="panel preferences-panel" *ngIf="page === 'themes'">
 				<div class="panel-heading theme-heading"><div><span class="theme-eyebrow">MAKE IT YOURS</span><h2>Choose your look</h2><p>Your theme follows you across the dashboard, sign in, and registration pages.</p></div><span class="saved-badge"><i></i> Saved on this device</span></div>
 				<div class="theme-options" role="radiogroup" aria-label="Color theme">
@@ -166,8 +124,41 @@
 					<article class="panel report-insights"><div class="panel-heading"><div><h2>Top products</h2><p>By revenue this period</p></div><button class="more-button" type="button" aria-label="More report options">···</button></div><div class="top-products"><div *ngFor="let product of products.slice(0, 4)"><span class="product-thumb" [ngClass]="product.color">{{ product.initials }}</span><span class="top-product-info"><strong>{{ product.name }}</strong><small>{{ product.stock + 20 }} units sold</small></span><strong class="top-product-revenue">${{ product.price * 24 | number:'1.0-0' }}</strong></div></div><a class="view-all report-view-all" routerLink="/inventory">View inventory <span>→</span></a></article></div>
 				<div class="panel report-summary"><div><span class="summary-icon">↗</span><span><strong>Revenue is trending up</strong><small>Your revenue grew 16.8% compared to the previous period. Electronics led this month's sales.</small></span></div><span class="summary-badge">Healthy growth</span></div>
 			</section>
-			</ng-template>
+			</ng-container>
 			<footer class="page-footer"><span>© 2026 IMS. Inventory made clearer.</span><span><a routerLink="/dashboard">Support</a><a routerLink="/dashboard">Documentation</a><span>All systems operational <i></i></span></span></footer>
+		</div>
+		<div class="modal-backdrop" *ngIf="modalType as modal" (click)="closeCreateModal()">
+			<section class="create-modal" [class.customer-modal]="modal === 'customer'" role="dialog" aria-modal="true" aria-labelledby="create-dialog-title" (click)="$event.stopPropagation()">
+				<header class="modal-heading"><div><span class="modal-eyebrow">IMS WORKSPACE</span><h2 id="create-dialog-title">{{ modal === 'product' ? 'Add product' : modal === 'customer' ? 'Add customer' : 'Create order' }}</h2><p>{{ modal === 'product' ? 'Add a product to your inventory catalog.' : modal === 'customer' ? 'Enter the contact information for this customer.' : 'Select a customer, product, and quantity.' }}</p></div><button class="modal-close" type="button" aria-label="Close dialog" (click)="closeCreateModal()">×</button></header>
+				<form *ngIf="modal === 'product'" #productCreateForm="ngForm" class="create-form" (ngSubmit)="saveProduct()">
+					<label>Product name<input name="productName" [(ngModel)]="productForm.name" required maxlength="100" placeholder="e.g. Wireless Headphones" /></label>
+					<label>SKU<input name="productSku" [(ngModel)]="productForm.sku" required maxlength="40" placeholder="e.g. WH-2048" /></label>
+					<label>Category<select name="productCategory" [(ngModel)]="productForm.category" required><option *ngFor="let category of categories.slice(1)" [value]="category">{{ category }}</option></select></label>
+					<label>Stock quantity<input name="productStock" type="number" [(ngModel)]="productForm.stock" required min="0" step="1" /></label>
+					<label>Price<input name="productPrice" type="number" [(ngModel)]="productForm.price" required min="0.01" step="0.01" /></label>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="productCreateForm.invalid">Save product</button></div>
+				</form>
+				<form *ngIf="modal === 'customer'" #customerCreateForm="ngForm" class="create-form customer-create-form" (ngSubmit)="saveCustomer()">
+					<label>Full name<input name="customerName" [(ngModel)]="customerForm.name" required maxlength="100" placeholder="e.g. Jordan Lee" /></label>
+					<label>Email address<input name="customerEmail" type="email" [(ngModel)]="customerForm.email" required maxlength="254" placeholder="name@example.com" /></label>
+					<label>Phone number<input name="customerPhone" type="tel" [(ngModel)]="customerForm.phone" maxlength="30" placeholder="+91 98765 43210" /></label>
+					<label>Company name<input name="customerCompany" [(ngModel)]="customerForm.company" maxlength="120" placeholder="Company (optional)" /></label>
+					<label class="form-field-wide">Address<input name="customerAddress" [(ngModel)]="customerForm.address" maxlength="200" placeholder="Street address" /></label>
+					<label>City<input name="customerCity" [(ngModel)]="customerForm.city" maxlength="80" placeholder="City" /></label>
+					<label>State / Province<input name="customerState" [(ngModel)]="customerForm.state" maxlength="80" placeholder="State or province" /></label>
+					<label>Postal code<input name="customerPostalCode" [(ngModel)]="customerForm.postalCode" maxlength="20" placeholder="Postal code" /></label>
+					<label>Country<input name="customerCountry" [(ngModel)]="customerForm.country" maxlength="80" placeholder="Country" /></label>
+					<label>GST number<input name="customerGstNumber" [(ngModel)]="customerForm.gstNumber" maxlength="15" pattern="[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z][1-9A-Za-z]Z[0-9A-Za-z]" placeholder="15-character GSTIN (optional)" /></label>
+					<label class="form-field-wide">Notes<textarea name="customerNotes" [(ngModel)]="customerForm.notes" maxlength="500" rows="3" placeholder="Additional customer information (optional)"></textarea></label>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="customerCreateForm.invalid">Save customer</button></div>
+				</form>
+				<form *ngIf="modal === 'order'" #orderCreateForm="ngForm" class="create-form" (ngSubmit)="saveOrder()">
+					<label>Customer<select name="orderCustomer" [(ngModel)]="orderForm.customer" required><option value="" disabled>Choose a customer</option><option *ngFor="let customer of customers" [value]="customer.name">{{ customer.name }}</option></select></label>
+					<label>Product<select name="orderProduct" [(ngModel)]="orderForm.product" required><option value="" disabled>Choose a product</option><option *ngFor="let product of products" [value]="product.name" [disabled]="product.stock === 0">{{ product.name }} ({{ product.stock }} in stock)</option></select></label>
+					<label>Quantity<input name="orderQuantity" type="number" [(ngModel)]="orderForm.quantity" required min="1" step="1" /></label>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="orderCreateForm.invalid || !selectedOrderProduct || orderForm.quantity > selectedOrderProduct.stock">Create order</button></div>
+				</form>
+			</section>
 		</div>
 	</main>
 </div>

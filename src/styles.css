@@ -256,3 +256,22 @@ html[data-theme='dark'] app-dashboard .global-search input { color:#e6ece9; }
   app-dashboard .global-search-wrap .global-search kbd { display:none; }
 }
 @media (max-width:480px) { app-dashboard .global-search-wrap { width:min(36vw,165px); } }
+
+/* Create product, customer, and order forms as modal dialogs. */
+app-dashboard .modal-backdrop { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:24px; overflow-y:auto; background:rgb(12 29 24 / 58%); backdrop-filter:blur(7px); }
+app-dashboard .create-modal { width:min(680px,100%); max-height:calc(100svh - 48px); overflow:auto; padding:24px; border:1px solid var(--line); border-radius:16px; color:var(--ink); background:#fff; box-shadow:0 28px 80px rgb(0 0 0 / 24%); }
+app-dashboard .create-modal.customer-modal { width:min(760px,100%); }
+app-dashboard .modal-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+app-dashboard .modal-eyebrow { color:var(--accent,#2f9b72); font-size:9px; font-weight:750; letter-spacing:1.4px; }
+app-dashboard .modal-heading h2 { margin:7px 0 0; color:var(--ink); font-size:21px; letter-spacing:-.4px; }
+app-dashboard .modal-heading p { margin:6px 0 0; color:var(--muted); font-size:11px; }
+app-dashboard .modal-close { display:grid; width:32px; height:32px; flex:0 0 auto; place-items:center; border:1px solid var(--line); border-radius:8px; color:var(--muted); background:transparent; font-size:22px; line-height:1; cursor:pointer; }
+app-dashboard .modal-close:hover { color:var(--ink); background:var(--accent-soft,#e9f4ed); }
+app-dashboard .create-modal .create-form { margin-top:20px; }
+app-dashboard .create-modal .create-form > label { color:var(--ink); font-size:11px; font-weight:600; }
+app-dashboard .create-modal .create-form input:focus,app-dashboard .create-modal .create-form select:focus,app-dashboard .create-modal .create-form textarea:focus { outline:0; border-color:var(--accent,#2f9b72); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent); }
+app-dashboard .create-modal .form-actions { padding-top:8px; }
+html[data-theme='dark'] app-dashboard .create-modal { border-color:#3a4942; color:#e6ece9; background:#222b27; }
+html[data-theme='dark'] app-dashboard .modal-heading h2,html[data-theme='dark'] app-dashboard .create-modal .create-form > label { color:#e6ece9; }
+html[data-theme='dark'] app-dashboard .create-modal .create-form input,html[data-theme='dark'] app-dashboard .create-modal .create-form select,html[data-theme='dark'] app-dashboard .create-modal .create-form textarea { border-color:#3c4943; color:#e6ece9; background:#1a211e; }
+@media (max-width:620px) { app-dashboard .modal-backdrop { padding:12px; } app-dashboard .create-modal { max-height:calc(100svh - 24px); padding:19px 16px; border-radius:13px; } }

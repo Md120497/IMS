@@ -15,6 +15,7 @@ export class Dashboard {
   searchTerm = '';
   globalSearchTerm = '';
   isGlobalSearchOpen = false;
+  activeModal: 'product' | 'customer' | 'order' | null = null;
   selectedCategory = 'All categories';
   readonly userName = 'Mohd Danish';
 
@@ -75,6 +76,29 @@ export class Dashboard {
     if (this.page === 'customers') return '/customers/new';
     if (this.page === 'reports') return null;
     return '/inventory/new';
+  }
+
+  get primaryActionType(): 'product' | 'customer' | 'order' | null {
+    if (this.page === 'orders') return 'order';
+    if (this.page === 'customers') return 'customer';
+    if (this.page === 'reports') return null;
+    return 'product';
+  }
+
+  get modalType(): 'product' | 'customer' | 'order' | null {
+    return this.activeModal ?? this.createType;
+  }
+
+  openCreateModal(type: 'product' | 'customer' | 'order' | null): void {
+    if (type) this.activeModal = type;
+  }
+
+  closeCreateModal(): void {
+    this.activeModal = null;
+    if (this.createType) {
+      const returnRoute = this.createType === 'product' ? '/inventory' : this.createType === 'customer' ? '/customers' : '/orders';
+      this.router.navigate([returnRoute]);
+    }
   }
 
   get selectedOrderProduct() {
@@ -215,6 +239,10 @@ export class Dashboard {
 
   @HostListener('window:keydown', ['$event'])
   focusGlobalSearch(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.modalType) {
+      this.closeCreateModal();
+      return;
+    }
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
       document.getElementById('project-search')?.focus();
@@ -246,6 +274,7 @@ export class Dashboard {
       initials: name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase(),
       color: 'violet',
     });
+    this.activeModal = null;
     this.router.navigate(['/inventory']);
   }
 
@@ -273,6 +302,7 @@ export class Dashboard {
       segment: 'Regular',
       color: 'blue',
     });
+    this.activeModal = null;
     this.router.navigate(['/customers']);
   }
 
@@ -298,6 +328,7 @@ export class Dashboard {
     customer.orders += 1;
     customer.spent += product.price * quantity;
     customer.lastOrder = new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date());
+    this.activeModal = null;
     this.router.navigate(['/orders']);
   }
 
