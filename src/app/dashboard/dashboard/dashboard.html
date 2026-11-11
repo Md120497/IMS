@@ -16,10 +16,18 @@
 		<p class="nav-label">WORKSPACE</p>
 		<nav class="main-nav" aria-label="Main navigation">
 			<a class="nav-item" routerLink="/dashboard" [class.active]="page === 'dashboard'" [attr.aria-current]="page === 'dashboard' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>Overview</span></a>
-			<a class="nav-item" routerLink="/inventory" [class.active]="page === 'inventory'" [attr.aria-current]="page === 'inventory' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg><span>Inventory</span><span class="nav-count">24</span></a>
 			<a class="nav-item" routerLink="/orders" [class.active]="page === 'orders'" [attr.aria-current]="page === 'orders' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3m8 2V3M4 10h16"/><path d="M8 14h3m-3 3h7"/></svg><span>Orders</span><span class="nav-count">8</span></a>
 			<a class="nav-item" routerLink="/customers" [class.active]="page === 'customers'" [attr.aria-current]="page === 'customers' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20h-11ZM16 5.5a3 3 0 0 1 0 5.8m2 3.2a5 5 0 0 1 2.5 4.3V20h-2"/></svg><span>Customers</span></a>
 			<a class="nav-item" routerLink="/reports" [class.active]="page === 'reports'" [attr.aria-current]="page === 'reports' ? 'page' : null"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg><span>Reports</span></a>
+		</nav>
+
+		<nav class="main-nav master-nav" aria-label="Master menu">
+			<button class="nav-item master-parent" type="button" [class.active]="isMasterPage" [attr.aria-expanded]="masterMenuOpen || isMasterPage" (click)="toggleMasterMenu()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg><span>Master</span><span class="master-chevron">{{ masterMenuOpen || isMasterPage ? '⌄' : '›' }}</span></button>
+			<div class="master-subnav" *ngIf="masterMenuOpen || isMasterPage">
+				<a class="nav-item master-child" routerLink="/master/items" [class.active]="page === 'item-master'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg><span>Item Master</span><span class="nav-count">{{ products.length }}</span></a>
+				<a class="nav-item master-child" routerLink="/master/users" [class.active]="page === 'user-master'"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20h-11ZM16 5.5a3 3 0 0 1 0 5.8m2 3.2a5 5 0 0 1 2.5 4.3V20h-2"/></svg><span>Users</span></a>
+				<a class="nav-item master-child" routerLink="/master/categories" [class.active]="page === 'category-master'"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span>Categories</span></a>
+			</div>
 		</nav>
 
 		<p class="nav-label tools-label">PREFERENCES</p>
@@ -39,7 +47,7 @@
 			<div class="breadcrumb"><span>Workspace</span><span class="crumb-separator">/</span><strong>{{ pageTitle }}</strong></div>
 			<div class="topbar-actions">
 				<div class="global-search-wrap">
-					<label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="project-search" [(ngModel)]="globalSearchTerm" [ngModelOptions]="{standalone: true}" (focus)="isGlobalSearchOpen = true" (input)="isGlobalSearchOpen = true" (keydown)="onGlobalSearchKeydown($event)" (blur)="isGlobalSearchOpen = false" aria-label="Search the whole project" placeholder="Search products, orders, customers..." /><kbd>Ctrl K</kbd></label>
+					<label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="project-search" [(ngModel)]="globalSearchTerm" [ngModelOptions]="{standalone: true}" (focus)="isGlobalSearchOpen = true" (input)="isGlobalSearchOpen = true" (keydown)="onGlobalSearchKeydown($event)" (blur)="isGlobalSearchOpen = false" aria-label="Search the whole project" placeholder="Search items, users, categories..." /><kbd>Ctrl K</kbd></label>
 					<div class="global-search-results" *ngIf="isGlobalSearchOpen && globalSearchTerm.trim()" role="listbox" aria-label="Search results">
 						<button *ngFor="let result of globalSearchResults" type="button" class="global-search-result" role="option" (mousedown)="$event.preventDefault()" (click)="openSearchResult(result)"><span class="search-result-type">{{ result.type }}</span><span class="search-result-copy"><strong>{{ result.title }}</strong><small>{{ result.detail }}</small></span><span class="search-result-arrow" aria-hidden="true">→</span></button>
 						<p class="global-search-empty" *ngIf="!globalSearchResults.length">No matching pages, products, orders, or customers.</p>
@@ -53,7 +61,7 @@
 		<div class="page-content">
 			<section class="welcome-row">
 				<div><p class="date-label">{{ formattedDate }}</p><h1>{{ page === 'dashboard' ? greeting : pageTitle }} <span>✦</span></h1><p class="welcome-subtitle">{{ pageDescription }}</p></div>
-				<button *ngIf="!createType" class="primary-button" type="button" (click)="openCreateModal(primaryActionType)"><span>＋</span> {{ primaryActionLabel }}</button>
+				<button *ngIf="!createType && hasPrimaryAction" class="primary-button" type="button" (click)="openCreateModal(primaryActionType)"><span>＋</span> {{ primaryActionLabel }}</button>
 			</section>
 
 			<ng-container>
@@ -84,17 +92,17 @@
 				</article>
 
 				<article class="panel category-panel">
-					<div class="panel-heading"><div><h2>Stock by category</h2><p>Current product distribution</p></div><button class="more-button" type="button" aria-label="More category options">···</button></div>
-					<div class="donut-wrap"><div class="donut-chart"><div class="donut-center"><strong>8,420</strong><span>Products</span></div></div></div>
-					<div class="category-legend"><div><span class="category-name"><i class="category-dot cat-electronics"></i>Electronics</span><strong>42% <small>3,536</small></strong></div><div><span class="category-name"><i class="category-dot cat-furniture"></i>Furniture</span><strong>28% <small>2,358</small></strong></div><div><span class="category-name"><i class="category-dot cat-accessories"></i>Accessories</span><strong>18% <small>1,516</small></strong></div><div><span class="category-name"><i class="category-dot cat-other"></i>Other</span><strong>12% <small>1,010</small></strong></div></div>
+					<div class="panel-heading"><div><h2>Items by category</h2><p>Current Item Master distribution</p></div><button class="more-button" type="button" aria-label="More category options">···</button></div>
+					<div class="donut-wrap"><div class="donut-chart"><div class="donut-center"><strong>{{ products.length }}</strong><span>Items</span></div></div></div>
+					<div class="category-legend"><div *ngFor="let category of categorySummaries"><span class="category-name"><i class="category-dot cat-electronics"></i>{{ category.name }}</span><strong>{{ category.itemCount }} <small>items</small></strong></div></div>
 				</article>
 			</section>
 
-			<section class="panel inventory-panel" *ngIf="page === 'dashboard' || page === 'inventory'">
-				<div class="panel-heading inventory-heading"><div><h2>{{ page === 'inventory' ? 'All products' : 'Recent inventory' }}</h2><p>{{ page === 'inventory' ? 'Review and manage stock across your catalog.' : 'Keep an eye on your most recently updated products' }}</p></div><a *ngIf="page === 'dashboard'" class="view-all" routerLink="/inventory">View all products <span>→</span></a></div>
-				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" aria-label="Search products" placeholder="Search products..." /></label><label class="category-filter"><select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" aria-label="Filter by category"><option *ngFor="let category of categories" [value]="category">{{ category }}</option></select></label><button class="filter-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Filters</button></div>
-				<div class="table-scroll"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>CATEGORY</th><th>STOCK LEVEL</th><th>PRICE</th><th>STATUS</th><th></th></tr></thead><tbody><tr *ngFor="let product of filteredProducts"><td><span class="product-cell"><i class="product-thumb" [ngClass]="product.color">{{ product.initials }}</i><strong>{{ product.name }}</strong></span></td><td class="muted-cell">{{ product.sku }}</td><td class="muted-cell">{{ product.category }}</td><td><span class="stock-cell"><span class="stock-track"><i [style.width.%]="product.stock > 100 ? 100 : product.stock * 1.2" [class.stock-empty]="product.stock === 0"></i></span><span>{{ product.stock }}</span></span></td><td class="price-cell">${{ product.price | number:'1.2-2' }}</td><td><span class="status-pill" [ngClass]="product.status.toLowerCase().replace(' ', '-')"><i></i>{{ product.status }}</span></td><td><button class="row-menu" type="button" aria-label="Product actions">···</button></td></tr><tr *ngIf="filteredProducts.length === 0"><td colspan="7" class="empty-state">No products match your search.</td></tr></tbody></table></div>
-				<div class="table-footer"><span>Showing <strong>{{ filteredProducts.length }}</strong> of <strong>{{ products.length }}</strong> products</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
+			<section class="panel inventory-panel" *ngIf="page === 'dashboard' || page === 'item-master'">
+				<div class="panel-heading inventory-heading"><div><h2>{{ page === 'item-master' ? 'Item Master List' : 'Recent items' }}</h2><p>{{ page === 'item-master' ? 'Manage items by category, unit, quantity, price, and session.' : 'Review recently added items across your categories.' }}</p></div><a *ngIf="page === 'dashboard'" class="view-all" routerLink="/master/items">View Item Master <span>→</span></a></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" aria-label="Search items" placeholder="Search items..." /></label><label class="category-filter"><select [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" aria-label="Filter by category"><option *ngFor="let category of categories" [value]="category">{{ category }}</option></select></label><button class="filter-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Filters</button></div>
+				<div class="table-scroll"><table><thead><tr><th>CATEGORY</th><th>ITEM</th><th>UNIT</th><th>QTY</th><th>PRICE</th><th>SESSION</th></tr></thead><tbody><tr *ngFor="let product of filteredProducts"><td class="muted-cell">{{ product.category }}</td><td><span class="product-cell"><i class="product-thumb" [ngClass]="product.color">{{ product.initials }}</i><strong>{{ product.name }}</strong></span></td><td class="muted-cell">{{ product.unit || '—' }}</td><td class="muted-cell">{{ product.stock || '—' }}</td><td class="price-cell">{{ product.price ? (product.price | number:'1.2-2') : '—' }}</td><td class="muted-cell">{{ product.session || '—' }}</td></tr><tr *ngIf="filteredProducts.length === 0"><td colspan="6" class="empty-state">No items match your search.</td></tr></tbody></table></div>
+				<div class="table-footer"><span>Showing <strong>{{ filteredProducts.length }}</strong> of <strong>{{ products.length }}</strong> items</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
 			</section>
 
 			<section class="stats-grid page-metrics" *ngIf="page === 'orders'" aria-label="Order summary">
@@ -117,6 +125,18 @@
 				<div class="table-footer"><span>Showing <strong>{{ filteredCustomers.length }}</strong> of {{ customers.length }} customers</span><div class="pagination"><button type="button" disabled aria-label="Previous page">←</button><button type="button" class="page-current">1</button><button type="button" aria-label="Next page">→</button></div></div>
 			</section>
 
+			<section class="panel data-panel master-data-panel" *ngIf="page === 'category-master'">
+				<div class="panel-heading inventory-heading"><div><h2>Categories</h2><p>Categories control how items are grouped in the Item Master.</p></div></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" aria-label="Search categories" placeholder="Search categories..." /></label></div>
+				<div class="table-scroll"><table><thead><tr><th>CATEGORY</th><th>ITEMS</th><th>DESCRIPTION</th></tr></thead><tbody><tr *ngFor="let category of filteredCategorySummaries"><td class="price-cell">{{ category.name }}</td><td>{{ category.itemCount }}</td><td class="muted-cell">Items assigned to {{ category.name }}</td></tr><tr *ngIf="!filteredCategorySummaries.length"><td colspan="3" class="empty-state">No categories match your search.</td></tr></tbody></table></div>
+			</section>
+
+			<section class="panel data-panel master-data-panel" *ngIf="page === 'user-master'">
+				<div class="panel-heading inventory-heading"><div><h2>Workspace users</h2><p>Administer workspace accounts and access roles.</p></div></div>
+				<div class="table-toolbar"><label class="table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" aria-label="Search users" placeholder="Search users..." /></label></div>
+				<div class="table-scroll"><table><thead><tr><th>USER</th><th>EMAIL</th><th>ROLE</th><th>STATUS</th></tr></thead><tbody><tr *ngFor="let user of filteredUsers"><td><span class="product-cell"><i class="product-thumb green">{{ user.initials }}</i><strong>{{ user.name }}</strong></span></td><td class="muted-cell">{{ user.email }}</td><td>{{ user.role }}</td><td><span class="status-pill in-stock">{{ user.status }}</span></td></tr><tr *ngIf="!filteredUsers.length"><td colspan="4" class="empty-state">No users match your search.</td></tr></tbody></table></div>
+			</section>
+
 			<section *ngIf="page === 'reports'" class="reports-page">
 				<div class="report-toolbar"><span class="report-range">Report period <strong>Last 7 months</strong></span><button class="select-button" type="button">Export CSV <span>↓</span></button></div>
 				<section class="stats-grid page-metrics" aria-label="Business performance summary"><article class="stat-card"><div class="stat-top"><span>Total revenue</span><span class="stat-icon purple">$</span></div><div class="stat-value">$284,560</div><div class="stat-foot"><span class="trend positive">↗ 16.8%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Total orders</span><span class="stat-icon green">↗</span></div><div class="stat-value">3,642</div><div class="stat-foot"><span class="trend positive">↗ 12.4%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Avg. order value</span><span class="stat-icon amber">$</span></div><div class="stat-value">$78.13</div><div class="stat-foot"><span class="trend positive">↗ 3.9%</span><span>vs. previous period</span></div></article><article class="stat-card"><div class="stat-top"><span>Products sold</span><span class="stat-icon rose">✦</span></div><div class="stat-value">8,294</div><div class="stat-foot"><span class="trend positive">↗ 9.2%</span><span>vs. previous period</span></div></article></section>
@@ -129,14 +149,16 @@
 		</div>
 		<div class="modal-backdrop" *ngIf="modalType as modal" (click)="closeCreateModal()">
 			<section class="create-modal" [class.customer-modal]="modal === 'customer'" role="dialog" aria-modal="true" aria-labelledby="create-dialog-title" (click)="$event.stopPropagation()">
-				<header class="modal-heading"><div><span class="modal-eyebrow">IMS WORKSPACE</span><h2 id="create-dialog-title">{{ modal === 'product' ? 'Add product' : modal === 'customer' ? 'Add customer' : 'Create order' }}</h2><p>{{ modal === 'product' ? 'Add a product to your inventory catalog.' : modal === 'customer' ? 'Enter the contact information for this customer.' : 'Select a customer, product, and quantity.' }}</p></div><button class="modal-close" type="button" aria-label="Close dialog" (click)="closeCreateModal()">×</button></header>
+				<header class="modal-heading"><div><span class="modal-eyebrow">IMS WORKSPACE</span><h2 id="create-dialog-title">{{ modal === 'product' ? 'Add item' : modal === 'customer' ? 'Add customer' : modal === 'order' ? 'Create order' : modal === 'user' ? 'Add workspace user' : 'Add category' }}</h2><p>{{ modal === 'product' ? 'Add item details to the Item Master.' : modal === 'customer' ? 'Enter the contact information for this customer.' : modal === 'order' ? 'Select a customer, item, and quantity.' : modal === 'user' ? 'Set up a user and assign a workspace role.' : 'Create a category for organizing items.' }}</p></div><button class="modal-close" type="button" aria-label="Close dialog" (click)="closeCreateModal()">×</button></header>
 				<form *ngIf="modal === 'product'" #productCreateForm="ngForm" class="create-form" (ngSubmit)="saveProduct()">
-					<label>Product name<input name="productName" [(ngModel)]="productForm.name" required maxlength="100" placeholder="e.g. Wireless Headphones" /></label>
-					<label>SKU<input name="productSku" [(ngModel)]="productForm.sku" required maxlength="40" placeholder="e.g. WH-2048" /></label>
-					<label>Category<select name="productCategory" [(ngModel)]="productForm.category" required><option *ngFor="let category of categories.slice(1)" [value]="category">{{ category }}</option></select></label>
-					<label>Stock quantity<input name="productStock" type="number" [(ngModel)]="productForm.stock" required min="0" step="1" /></label>
-					<label>Price<input name="productPrice" type="number" [(ngModel)]="productForm.price" required min="0.01" step="0.01" /></label>
-					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="productCreateForm.invalid">Save product</button></div>
+				<label>Category<select name="productCategory" [(ngModel)]="productForm.category" (ngModelChange)="onItemCategoryChange($event)" required><option *ngFor="let category of categories.slice(1)" [value]="category">{{ category }}</option></select></label>
+					<label>Item<input name="itemName" [(ngModel)]="productForm.name" required maxlength="100" placeholder="Enter item name" /></label>
+					<label *ngIf="productForm.category === 'Pesticide'">Unit<select name="itemUnit" [(ngModel)]="productForm.unit"><option value="Kg">Kg</option><option value="Ltr">Ltr</option><option value="ml">ml</option></select></label>
+					<label *ngIf="productForm.category !== 'Pesticide'">Unit<input name="itemUnit" [(ngModel)]="productForm.unit" maxlength="30" placeholder="Optional unit" /></label>
+					<label>Qty<input name="itemQty" type="number" [(ngModel)]="productForm.stock" min="0" step="1" placeholder="0" /></label>
+					<label>Price<input name="itemPrice" type="number" [(ngModel)]="productForm.price" min="0" step="0.01" placeholder="0.00" /></label>
+					<label>Session<input name="itemSession" [(ngModel)]="productForm.session" maxlength="80" placeholder="Optional session" /></label>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="productCreateForm.invalid">Save item</button></div>
 				</form>
 				<form *ngIf="modal === 'customer'" #customerCreateForm="ngForm" class="create-form customer-create-form" (ngSubmit)="saveCustomer()">
 					<label>Full name<input name="customerName" [(ngModel)]="customerForm.name" required maxlength="100" placeholder="e.g. Jordan Lee" /></label>
@@ -154,9 +176,22 @@
 				</form>
 				<form *ngIf="modal === 'order'" #orderCreateForm="ngForm" class="create-form" (ngSubmit)="saveOrder()">
 					<label>Customer<select name="orderCustomer" [(ngModel)]="orderForm.customer" required><option value="" disabled>Choose a customer</option><option *ngFor="let customer of customers" [value]="customer.name">{{ customer.name }}</option></select></label>
-					<label>Product<select name="orderProduct" [(ngModel)]="orderForm.product" required><option value="" disabled>Choose a product</option><option *ngFor="let product of products" [value]="product.name" [disabled]="product.stock === 0">{{ product.name }} ({{ product.stock }} in stock)</option></select></label>
+					<label>Item<select name="orderProduct" [(ngModel)]="orderForm.product" required><option value="" disabled>Choose an item</option><option *ngFor="let product of products" [value]="itemKey(product)" [disabled]="product.stock === 0">{{ product.name }}{{ product.unit ? ' · ' + product.unit : '' }} ({{ product.stock }} in stock)</option></select></label>
 					<label>Quantity<input name="orderQuantity" type="number" [(ngModel)]="orderForm.quantity" required min="1" step="1" /></label>
 					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="orderCreateForm.invalid || !selectedOrderProduct || orderForm.quantity > selectedOrderProduct.stock">Create order</button></div>
+				</form>
+				<form *ngIf="modal === 'category'" #categoryCreateForm="ngForm" class="create-form" (ngSubmit)="saveCategory()">
+					<label class="form-field-wide">Category name<input name="categoryName" [(ngModel)]="categoryDraft" required maxlength="80" placeholder="e.g. Raw Materials" /></label>
+					<p class="form-field-wide form-hint">New categories appear in the Item Master category selector.</p>
+					<p *ngIf="categoryError" class="form-field-wide form-error" role="alert">{{ categoryError }}</p>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="categoryCreateForm.invalid">Save category</button></div>
+				</form>
+				<form *ngIf="modal === 'user'" #userCreateForm="ngForm" class="create-form" (ngSubmit)="saveUser()">
+					<label>Name<input name="userName" [(ngModel)]="userForm.name" required maxlength="100" placeholder="Full name" /></label>
+					<label>Email<input name="userEmail" type="email" [(ngModel)]="userForm.email" required maxlength="254" placeholder="name@company.com" /></label>
+					<label>Role<select name="userRole" [(ngModel)]="userForm.role" required><option>Staff</option><option>Manager</option><option>Admin</option></select></label>
+					<p *ngIf="userError" class="form-field-wide form-error" role="alert">{{ userError }}</p>
+					<div class="form-actions"><button class="cancel-button" type="button" (click)="closeCreateModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="userCreateForm.invalid">Create user</button></div>
 				</form>
 			</section>
 		</div>

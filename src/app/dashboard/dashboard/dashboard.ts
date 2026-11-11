@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Customer, DashboardData, Order, Product } from './dashboard-data';
+import { Customer, DashboardData, Order, Product, WorkspaceUser } from './dashboard-data';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +15,16 @@ export class Dashboard {
   searchTerm = '';
   globalSearchTerm = '';
   isGlobalSearchOpen = false;
-  activeModal: 'product' | 'customer' | 'order' | null = null;
+  activeModal: 'product' | 'customer' | 'order' | 'user' | 'category' | null = null;
+  masterMenuOpen = true;
   selectedCategory = 'All categories';
   readonly userName = 'Mohd Danish';
 
-  productForm = { name: '', sku: '', category: 'Electronics', stock: 0, price: 0 };
+  productForm = { name: '', sku: '', category: 'Pesticide', unit: 'Kg', stock: 0, price: 0, session: '' };
+  categoryDraft = '';
+  categoryError = '';
+  userForm = { name: '', email: '', role: 'Staff' };
+  userError = '';
   customerForm = {
     name: '',
     email: '',
@@ -55,8 +60,21 @@ export class Dashboard {
   }
 
   get page(): string {
-    const segment = this.router.url.split('?')[0].split('/')[1];
-    return ['inventory', 'orders', 'customers', 'reports', 'settings', 'themes', 'profile'].includes(segment) ? segment : 'dashboard';
+    const segments = this.router.url.split('?')[0].split('/').filter(Boolean);
+    const segment = segments[0];
+    if (segment === 'master') {
+      return ({ items: 'item-master', users: 'user-master', categories: 'category-master' } as Record<string, string>)[segments[1]] ?? 'item-master';
+    }
+    if (segment === 'inventory') return 'item-master';
+    return ['orders', 'customers', 'reports', 'settings', 'themes', 'profile'].includes(segment) ? segment : 'dashboard';
+  }
+
+  get isMasterPage(): boolean {
+    return ['item-master', 'user-master', 'category-master'].includes(this.page);
+  }
+
+  toggleMasterMenu(): void {
+    this.masterMenuOpen = !this.masterMenuOpen;
   }
 
   get createType(): 'product' | 'customer' | 'order' | null {
@@ -68,29 +86,34 @@ export class Dashboard {
   }
 
   get primaryActionLabel(): string {
-    return this.page === 'orders' ? 'Create order' : this.page === 'customers' ? 'Add customer' : this.page === 'reports' ? 'Export report' : 'Add product';
+    return ({ orders: 'Create order', customers: 'Add customer', reports: 'Export report', 'user-master': 'Add user', 'category-master': 'Add category', 'item-master': 'Add item', dashboard: 'Add item' } as Record<string, string>)[this.page] ?? '';
   }
 
-  get primaryActionRoute(): string | null {
-    if (this.page === 'orders') return '/orders/new';
-    if (this.page === 'customers') return '/customers/new';
-    if (this.page === 'reports') return null;
-    return '/inventory/new';
+  get hasPrimaryAction(): boolean {
+    return ['dashboard', 'item-master', 'orders', 'customers', 'reports', 'user-master', 'category-master'].includes(this.page);
   }
 
-  get primaryActionType(): 'product' | 'customer' | 'order' | null {
+  get primaryActionType(): 'product' | 'customer' | 'order' | 'user' | 'category' | null {
     if (this.page === 'orders') return 'order';
     if (this.page === 'customers') return 'customer';
+    if (this.page === 'user-master') return 'user';
+    if (this.page === 'category-master') return 'category';
     if (this.page === 'reports') return null;
     return 'product';
   }
 
-  get modalType(): 'product' | 'customer' | 'order' | null {
+  get modalType(): 'product' | 'customer' | 'order' | 'user' | 'category' | null {
     return this.activeModal ?? this.createType;
   }
 
-  openCreateModal(type: 'product' | 'customer' | 'order' | null): void {
-    if (type) this.activeModal = type;
+  openCreateModal(type: 'product' | 'customer' | 'order' | 'user' | 'category' | null): void {
+    if (type) {
+      if (type === 'product' && this.selectedCategory !== 'All categories') this.onItemCategoryChange(this.selectedCategory);
+      if (type === 'product' && this.selectedCategory !== 'All categories') this.productForm.category = this.selectedCategory;
+      this.categoryError = '';
+      this.userError = '';
+      this.activeModal = type;
+    }
   }
 
   closeCreateModal(): void {
@@ -102,14 +125,22 @@ export class Dashboard {
   }
 
   get selectedOrderProduct() {
-    return this.products.find((product) => product.name === this.orderForm.product);
+    return this.products.find((product) => this.itemKey(product) === this.orderForm.product);
+  }
+
+  itemKey(product: Product): string {
+    return `${product.category}|${product.name}|${product.unit}`;
+  }
+
+  onItemCategoryChange(category: string): void {
+    this.productForm.unit = category === 'Pesticide' ? 'Kg' : '';
   }
 
   get pageTitle(): string {
     if (this.createType === 'product') return 'Add product';
     if (this.createType === 'customer') return 'Create customer';
     if (this.createType === 'order') return 'Create order';
-    return ({ dashboard: 'Overview', inventory: 'Inventory', orders: 'Orders', customers: 'Customers', reports: 'Reports', settings: 'Settings', themes: 'Themes', profile: 'My profile' } as Record<string, string>)[this.page];
+    return ({ dashboard: 'Overview', 'item-master': 'Item Master', 'user-master': 'User Master', 'category-master': 'Category Master', orders: 'Orders', customers: 'Customers', reports: 'Reports', settings: 'Settings', themes: 'Themes', profile: 'My profile' } as Record<string, string>)[this.page];
   }
 
   get pageDescription(): string {
@@ -118,7 +149,9 @@ export class Dashboard {
     if (this.createType === 'order') return 'Create an order for one of your customers.';
     return ({
       dashboard: 'Here’s what’s happening with your inventory today.',
-      inventory: 'Manage products, stock levels, and product details.',
+      'item-master': 'Manage items by category, unit, quantity, price, and session.',
+      'user-master': 'Manage workspace users and their access roles.',
+      'category-master': 'Create categories and organize item records.',
       orders: 'Track and manage customer orders from one place.',
       customers: 'Get to know the people behind your business.',
       reports: 'Understand your business performance at a glance.',
@@ -128,7 +161,9 @@ export class Dashboard {
     } as Record<string, string>)[this.page];
   }
 
-  readonly categories = ['All categories', 'Electronics', 'Furniture', 'Accessories'];
+  get categories(): string[] {
+    return ['All categories', ...this.data.categories];
+  }
   readonly themes = [
     { id: 'forest', name: 'Forest', description: 'Calm greens and warm neutrals', tone: 'Light' },
     { id: 'ocean', name: 'Ocean', description: 'Clear blues with a cool finish', tone: 'Light' },
@@ -136,6 +171,27 @@ export class Dashboard {
     { id: 'dark', name: 'Midnight', description: 'A focused, low light workspace', tone: 'Dark' },
   ];
   selectedTheme = typeof localStorage === 'undefined' ? 'forest' : localStorage.getItem('ims-theme') || 'forest';
+
+  get users(): WorkspaceUser[] {
+    return this.data.users;
+  }
+
+  get categorySummaries(): Array<{ name: string; itemCount: number }> {
+    return this.data.categories.map((name) => ({
+      name,
+      itemCount: this.products.filter((product) => product.category === name).length,
+    }));
+  }
+
+  get filteredCategorySummaries(): Array<{ name: string; itemCount: number }> {
+    const query = this.searchTerm.trim().toLowerCase();
+    return this.categorySummaries.filter((category) => !query || category.name.toLowerCase().includes(query));
+  }
+
+  get filteredUsers(): WorkspaceUser[] {
+    const query = this.searchTerm.trim().toLowerCase();
+    return this.users.filter((user) => !query || Object.values(user).join(' ').toLowerCase().includes(query));
+  }
 
   setTheme(theme: string): void {
     this.selectedTheme = theme;
@@ -199,6 +255,9 @@ export class Dashboard {
     const pages = [
       { title: 'Overview', route: '/dashboard', keywords: 'dashboard overview home' },
       { title: 'Inventory', route: '/inventory', keywords: 'inventory products stock catalog sku' },
+      { title: 'Item Master', route: '/master/items', keywords: 'item master inventory list' },
+      { title: 'User Master', route: '/master/users', keywords: 'users admin access roles' },
+      { title: 'Category Master', route: '/master/categories', keywords: 'categories category item types' },
       { title: 'Orders', route: '/orders', keywords: 'orders sales fulfillment' },
       { title: 'Customers', route: '/customers', keywords: 'customers clients directory' },
       { title: 'Reports', route: '/reports', keywords: 'reports revenue analytics performance' },
@@ -209,7 +268,7 @@ export class Dashboard {
 
     const products = this.products.filter((product) =>
       Object.values(product).join(' ').toLowerCase().includes(query),
-    ).map((product) => ({ type: 'Product', title: product.name, detail: `${product.sku} · ${product.category} · ${product.status}`, route: '/inventory', query: product.name }));
+    ).map((product) => ({ type: 'Item', title: product.name, detail: `${product.category} · ${product.unit || 'No unit'} · Qty ${product.stock}`, route: '/master/items', query: product.name }));
 
     const orders = this.orders.filter((order) =>
       Object.values(order).join(' ').toLowerCase().includes(query),
@@ -219,7 +278,13 @@ export class Dashboard {
       Object.values(customer).join(' ').toLowerCase().includes(query),
     ).map((customer) => ({ type: 'Customer', title: customer.name, detail: `${customer.email} · ${customer.segment}`, route: '/customers', query: customer.name }));
 
-    return [...pages, ...products, ...orders, ...customers].slice(0, 8);
+    const categories = this.data.categories.filter((category) => category.toLowerCase().includes(query))
+      .map((category) => ({ type: 'Category', title: category, detail: `${this.products.filter((item) => item.category === category).length} items`, route: '/master/categories', query: category }));
+
+    const users = this.users.filter((user) => Object.values(user).join(' ').toLowerCase().includes(query))
+      .map((user) => ({ type: 'User', title: user.name, detail: `${user.email} · ${user.role}`, route: '/master/users', query: user.name }));
+
+    return [...pages, ...products, ...orders, ...customers, ...categories, ...users].slice(0, 8);
   }
 
   openSearchResult(result: { route: string; query?: string }): void {
@@ -235,6 +300,41 @@ export class Dashboard {
       event.preventDefault();
       this.openSearchResult(this.globalSearchResults[0]);
     }
+  }
+
+  saveCategory(): void {
+    const category = this.categoryDraft.trim();
+    if (!category) return;
+    if (this.data.categories.some((entry) => entry.toLowerCase() === category.toLowerCase())) {
+      this.categoryError = 'This category already exists.';
+      return;
+    }
+    this.data.categories.push(category);
+    this.data.saveMasterData();
+    this.categoryDraft = '';
+    this.categoryError = '';
+    this.activeModal = null;
+  }
+
+  saveUser(): void {
+    const name = this.userForm.name.trim();
+    const email = this.userForm.email.trim().toLowerCase();
+    if (!name || !email) return;
+    if (this.users.some((user) => user.email.toLowerCase() === email)) {
+      this.userError = 'A user with this email already exists.';
+      return;
+    }
+    this.users.push({
+      name,
+      email,
+      role: this.userForm.role,
+      status: 'Active',
+      initials: name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase(),
+    });
+    this.data.saveMasterData();
+    this.userForm = { name: '', email: '', role: 'Staff' };
+    this.userError = '';
+    this.activeModal = null;
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -262,18 +362,23 @@ export class Dashboard {
   saveProduct(): void {
     const name = this.productForm.name.trim();
     const sku = this.productForm.sku.trim();
-    if (!name || !sku || !Number.isInteger(this.productForm.stock) || this.productForm.stock < 0 || !Number.isFinite(this.productForm.price) || this.productForm.price <= 0) return;
+    const quantity = Number(this.productForm.stock ?? 0);
+    const price = Number(this.productForm.price ?? 0);
+    if (!name || !Number.isInteger(quantity) || quantity < 0 || !Number.isFinite(price) || price < 0) return;
 
     this.products.unshift({
       name,
       sku,
       category: this.productForm.category,
-      stock: this.productForm.stock,
-      price: this.productForm.price,
-      status: this.productForm.stock === 0 ? 'Out of stock' : this.productForm.stock < 10 ? 'Low stock' : 'In stock',
+      unit: this.productForm.unit ?? '',
+      stock: quantity,
+      price,
+      session: this.productForm.session.trim(),
+      status: quantity === 0 ? 'Out of stock' : quantity < 10 ? 'Low stock' : 'In stock',
       initials: name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase(),
       color: 'violet',
     });
+    this.data.saveMasterData();
     this.activeModal = null;
     this.router.navigate(['/inventory']);
   }
@@ -308,7 +413,7 @@ export class Dashboard {
 
   saveOrder(): void {
     const customer = this.customers.find((entry) => entry.name === this.orderForm.customer);
-    const product = this.products.find((entry) => entry.name === this.orderForm.product);
+    const product = this.selectedOrderProduct;
     const quantity = this.orderForm.quantity;
     if (!customer || !product || !Number.isInteger(quantity) || quantity < 1 || product.stock < quantity) return;
 
@@ -317,7 +422,7 @@ export class Dashboard {
       id: `#ORD-${nextOrderId}`,
       customer: customer.name,
       initials: customer.initials,
-      items: quantity === 1 ? product.name : `${product.name} × ${quantity}`,
+      items: quantity === 1 ? `${product.name}${product.unit ? ` (${product.unit})` : ''}` : `${product.name}${product.unit ? ` (${product.unit})` : ''} × ${quantity}`,
       date: new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date()),
       amount: product.price * quantity,
       status: 'Pending',
@@ -328,6 +433,7 @@ export class Dashboard {
     customer.orders += 1;
     customer.spent += product.price * quantity;
     customer.lastOrder = new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date());
+    this.data.saveMasterData();
     this.activeModal = null;
     this.router.navigate(['/orders']);
   }

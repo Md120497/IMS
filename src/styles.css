@@ -247,6 +247,13 @@ app-dashboard .search-result-copy strong { overflow:hidden; font-size:11px; font
 app-dashboard .search-result-copy small { overflow:hidden; color:var(--muted); font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
 app-dashboard .search-result-arrow { margin-left:auto; color:var(--accent,#2f9b72); }
 app-dashboard .global-search-empty { margin:0; padding:14px 10px; color:var(--muted); font-size:11px; }
+app-dashboard .master-parent { width:100%; border:0; background:transparent; text-align:left; font:inherit; }
+app-dashboard .master-parent .master-chevron { margin-left:auto; font-size:15px; }
+app-dashboard .master-subnav { display:grid; gap:4px; margin-left:8px; padding-left:6px; border-left:1px solid rgb(255 255 255 / 15%); }
+app-dashboard .master-child { min-height:36px; padding-left:9px; font-size:11px; }
+app-dashboard .master-data-panel { margin-top:15px; }
+app-dashboard .form-hint { margin:0; color:var(--muted); font-size:10px; }
+app-dashboard .form-error { margin:0; color:#b54747; font-size:10px; }
 html[data-theme='dark'] app-dashboard .global-search-results { border-color:#303a36; color:#dce5df; background:#222b27; }
 html[data-theme='dark'] app-dashboard .global-search input { color:#e6ece9; }
 @media (max-width:760px) {

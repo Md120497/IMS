@@ -4,11 +4,21 @@ export interface Product {
   name: string;
   sku: string;
   category: string;
+  unit: string;
   stock: number;
   price: number;
+  session: string;
   status: string;
   initials: string;
   color: string;
+}
+
+export interface WorkspaceUser {
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  initials: string;
 }
 
 export interface Customer {
@@ -44,12 +54,24 @@ export interface Order {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardData {
+  private readonly masterDataKey = 'ims-master-data';
+
+  readonly categories: string[] = ['Pesticide', 'Packing Materials'];
+
   readonly products: Product[] = [
-    { name: 'Wireless Headphones', sku: 'WH-2048', category: 'Electronics', stock: 128, price: 89.99, status: 'In stock', initials: 'WH', color: 'violet' },
-    { name: 'Ergonomic Desk Chair', sku: 'CH-1082', category: 'Furniture', stock: 8, price: 249.00, status: 'Low stock', initials: 'DC', color: 'orange' },
-    { name: 'Laptop Stand', sku: 'LS-3301', category: 'Accessories', stock: 0, price: 54.50, status: 'Out of stock', initials: 'LS', color: 'blue' },
-    { name: 'Mechanical Keyboard', sku: 'MK-7712', category: 'Electronics', stock: 64, price: 119.00, status: 'In stock', initials: 'MK', color: 'green' },
-    { name: 'Desk Organizer Set', sku: 'DO-0914', category: 'Accessories', stock: 12, price: 32.00, status: 'Low stock', initials: 'DO', color: 'pink' },
+    { name: 'Pesticide', sku: '', category: 'Pesticide', unit: 'Kg', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'PE', color: 'green' },
+    { name: 'Pesticide', sku: '', category: 'Pesticide', unit: 'Ltr', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'PE', color: 'green' },
+    { name: 'Pesticide', sku: '', category: 'Pesticide', unit: 'ml', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'PE', color: 'green' },
+    { name: 'Big CRET', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'BC', color: 'orange' },
+    { name: 'Medium CRET', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'MC', color: 'orange' },
+    { name: 'Big Box', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'BB', color: 'blue' },
+    { name: 'Medium Box', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'MB', color: 'blue' },
+    { name: 'Small Box', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'SB', color: 'blue' },
+    { name: 'Plastic Rope', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'PR', color: 'pink' },
+    { name: 'Tape', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'TA', color: 'pink' },
+    { name: 'Envelope', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'EN', color: 'pink' },
+    { name: 'Trade Sticker', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'TS', color: 'pink' },
+    { name: 'English Paper', sku: '', category: 'Packing Materials', unit: '', stock: 0, price: 0, session: '', status: 'Out of stock', initials: 'EP', color: 'pink' },
   ];
 
   readonly orders: Order[] = [
@@ -67,4 +89,46 @@ export class DashboardData {
     { name: 'Demi Wilkinson', email: 'demi@acme.co', initials: 'DW', orders: 8, spent: 920.00, lastOrder: 'Nov 06, 2026', segment: 'Regular', color: 'pink' },
     { name: 'Candice Wu', email: 'candice@acme.co', initials: 'CW', orders: 6, spent: 672.45, lastOrder: 'Nov 05, 2026', segment: 'Regular', color: 'blue' },
   ];
+
+  readonly users: WorkspaceUser[] = [
+    { name: 'Mohd Danish', email: 'danish@ims.local', role: 'Admin', status: 'Active', initials: 'MD' },
+  ];
+
+  constructor() {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(this.masterDataKey) ?? 'null') as {
+        products?: Product[];
+        categories?: string[];
+        users?: WorkspaceUser[];
+      } | null;
+      if (saved?.products?.length) {
+        this.products.splice(0, this.products.length, ...saved.products.map((product) => ({
+          ...product,
+          unit: product.unit ?? '',
+          session: product.session ?? '',
+        })));
+      }
+      if (saved?.categories?.length) this.categories.splice(0, this.categories.length, ...saved.categories);
+      if (saved?.users?.length) this.users.splice(0, this.users.length, ...saved.users);
+      for (const product of this.products) {
+        if (!this.categories.includes(product.category)) this.categories.push(product.category);
+      }
+    } catch {
+      localStorage.removeItem(this.masterDataKey);
+    }
+  }
+
+  saveMasterData(): void {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      localStorage.setItem(this.masterDataKey, JSON.stringify({
+        products: this.products,
+        categories: this.categories,
+        users: this.users,
+      }));
+    } catch {
+      // Keep the workspace usable when browser storage is unavailable.
+    }
+  }
 }
